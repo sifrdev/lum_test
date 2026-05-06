@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kitchen Sink</title>
+  <style>
+    /* ── Reset & base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, sans-serif;
+      font-size: 1rem;
+      line-height: 1.6;
+      color: #1a1a1a;
+      background: #f5f5f5;
+      padding: 2rem 1rem;
+    }
+    h1, h2, h3, h4, h5, h6 { margin-bottom: .5rem; line-height: 1.2; }
+    p, ul, ol, dl, blockquote, pre, figure, table, details { margin-bottom: 1rem; }
+
+    /* ── Layout ── */
+    .container { max-width: 860px; margin: 0 auto; }
+    section {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    section > h2 {
+      font-size: 1.1rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: #555;
+      border-bottom: 2px solid #e0e0e0;
+      padding-bottom: .4rem;
+      margin-bottom: 1rem;
+    }
+
+    /* ── Typography ── */
+    .badge {
+      display: inline-block;
+      padding: .15em .5em;
+      font-size: .75rem;
+      font-weight: 600;
+      border-radius: 3px;
+      background: #e3f0ff;
+      color: #1565c0;
+      margin-left: .3em;
+    }
+
+    /* ── Colors ── */
+    .swatch-row { display: flex; gap: .5rem; flex-wrap: wrap; }
+    .swatch {
+      width: 60px; height: 40px;
+      border-radius: 4px;
+      border: 1px solid rgba(0,0,0,.1);
+    }
+
+    /* ── Buttons ── */
+    .btn-row { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center; }
+    .btn {
+      display: inline-block;
+      padding: .45em 1.1em;
+      font-size: .95rem;
+      font-weight: 500;
+      border-radius: 4px;
+      border: 2px solid transparent;
+      cursor: pointer;
+      text-decoration: none;
+      transition: opacity .15s;
+    }
+    .btn:hover { opacity: .82; }
+    .btn-primary   { background:#1976d2; color:#fff; border-color:#1976d2; }
+    .btn-secondary { background:#fff;    color:#1a1a1a; border-color:#aaa; }
+    .btn-success   { background:#388e3c; color:#fff; border-color:#388e3c; }
+    .btn-danger    { background:#d32f2f; color:#fff; border-color:#d32f2f; }
+    .btn-warning   { background:#f57c00; color:#fff; border-color:#f57c00; }
+    .btn-ghost     { background:transparent; color:#1976d2; border-color:#1976d2; }
+    .btn[disabled] { opacity:.45; cursor:not-allowed; }
+    .btn-sm { font-size:.8rem; padding:.3em .8em; }
+    .btn-lg { font-size:1.1rem; padding:.6em 1.5em; }
+
+    /* ── Forms ── */
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    @media (max-width: 600px) { .form-grid { grid-template-columns: 1fr; } }
+    .field { display: flex; flex-direction: column; gap: .3rem; }
+    .field label { font-weight: 600; font-size: .9rem; }
+    .field input,
+    .field select,
+    .field textarea {
+      padding: .45em .7em;
+      border: 1px solid #bbb;
+      border-radius: 4px;
+      font-size: .95rem;
+      font-family: inherit;
+      background: #fff;
+    }
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus {
+      outline: 2px solid #1976d2;
+      outline-offset: 1px;
+      border-color: transparent;
+    }
+    .field .hint { font-size: .8rem; color: #666; }
+    .field.error input { border-color: #d32f2f; }
+    .field.error .hint { color: #d32f2f; }
+    .check-group { display: flex; flex-direction: column; gap: .4rem; }
+    .check-group label { display: flex; align-items: center; gap: .5rem; font-weight: 400; cursor: pointer; }
+
+    /* ── Table ── */
+    table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+    thead { background: #f0f0f0; }
+    th, td { padding: .6rem .8rem; text-align: left; border: 1px solid #ddd; }
+    tbody tr:nth-child(even) { background: #fafafa; }
+
+    /* ── Alerts ── */
+    .alert {
+      padding: .75rem 1rem;
+      border-radius: 4px;
+      border-left: 4px solid;
+      margin-bottom: .75rem;
+    }
+    .alert-info    { background:#e3f0ff; border-color:#1976d2; color:#0d47a1; }
+    .alert-success { background:#e8f5e9; border-color:#388e3c; color:#1b5e20; }
+    .alert-warning { background:#fff8e1; border-color:#f57c00; color:#e65100; }
+    .alert-danger  { background:#ffebee; border-color:#d32f2f; color:#b71c1c; }
+
+    /* ── Progress ── */
+    progress {
+      width: 100%; height: 10px;
+      border-radius: 5px;
+      overflow: hidden;
+      appearance: none;
+      border: none;
+    }
+    progress::-webkit-progress-bar { background:#e0e0e0; border-radius:5px; }
+    progress::-webkit-progress-value { background:#1976d2; border-radius:5px; }
+    progress::-moz-progress-bar { background:#1976d2; border-radius:5px; }
+
+    /* ── Code ── */
+    code {
+      font-family: 'Courier New', monospace;
+      font-size: .88em;
+      background: #f0f0f0;
+      padding: .1em .35em;
+      border-radius: 3px;
+    }
+    pre {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      padding: 1rem;
+      border-radius: 5px;
+      overflow-x: auto;
+      font-size: .88rem;
+    }
+    pre code { background: none; padding: 0; color: inherit; font-size: inherit; }
+
+    /* ── Misc ── */
+    hr { border: none; border-top: 1px solid #ddd; margin: 1.25rem 0; }
+    blockquote {
+      border-left: 4px solid #1976d2;
+      padding: .5rem 1rem;
+      background: #f0f6ff;
+      border-radius: 0 4px 4px 0;
+      font-style: italic;
+    }
+    figure { text-align: center; }
+    figure img { max-width: 100%; border-radius: 6px; }
+    figcaption { font-size: .82rem; color: #666; margin-top: .4rem; }
+    details summary { cursor: pointer; font-weight: 600; }
+    details[open] summary { margin-bottom: .5rem; }
+    dialog {
+      border: none;
+      border-radius: 8px;
+      padding: 1.5rem;
+      box-shadow: 0 6px 30px rgba(0,0,0,.25);
+      max-width: 400px;
+      width: 90%;
+    }
+    dialog::backdrop { background: rgba(0,0,0,.45); }
+    .dialog-actions { display: flex; justify-content: flex-end; gap: .5rem; margin-top: 1rem; }
+    meter { width: 100%; height: 12px; }
+    .range-row { display: flex; align-items: center; gap: .75rem; }
+    .range-row input[type=range] { flex: 1; }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <h1 style="margin-bottom:.25rem">Kitchen Sink <span class="badge">HTML</span></h1>
+  <p style="color:#666;margin-bottom:2rem">A comprehensive showcase of common HTML elements and patterns.</p>
+
+  <!-- ─────────────────── TYPOGRAPHY ─────────────────── -->
+  <section>
+    <h2>Typography</h2>
+    <h1>Heading 1</h1>
+    <h2>Heading 2</h2>
+    <h3>Heading 3</h3>
+    <h4>Heading 4</h4>
+    <h5>Heading 5</h5>
+    <h6>Heading 6</h6>
+    <hr />
+    <p>
+      Regular paragraph. <strong>Bold text.</strong> <em>Italic text.</em>
+      <u>Underlined.</u> <s>Strikethrough.</s> <mark>Highlighted.</mark>
+      <small>Small text.</small> Text with <sup>superscript</sup> and <sub>subscript</sub>.
+      <abbr title="HyperText Markup Language">HTML</abbr>.
+      <kbd>Ctrl</kbd> + <kbd>S</kbd>. Inline <code>code</code>.
+    </p>
+    <blockquote>
+      "The web is the medium of our time — it demands that we craft it with care."
+      <footer>— Anonymous</footer>
+    </blockquote>
+    <p>An unordered list:</p>
+    <ul>
+      <li>Alpha</li>
+      <li>Bravo
+        <ul>
+          <li>Nested item</li>
+          <li>Another nested item</li>
+        </ul>
+      </li>
+      <li>Charlie</li>
+    </ul>
+    <p>An ordered list:</p>
+    <ol>
+      <li>First</li>
+      <li>Second</li>
+      <li>Third</li>
+    </ol>
+    <p>A description list:</p>
+    <dl>
+      <dt><strong>HTML</strong></dt>
+      <dd>HyperText Markup Language — the backbone of the web.</dd>
+      <dt><strong>CSS</strong></dt>
+      <dd>Cascading Style Sheets — controls presentation and layout.</dd>
+    </dl>
+  </section>
+
+  <!-- ─────────────────── COLORS ─────────────────── -->
+  <section>
+    <h2>Color Palette</h2>
+    <div class="swatch-row">
+      <div class="swatch" style="background:#1976d2" title="#1976d2"></div>
+      <div class="swatch" style="background:#388e3c" title="#388e3c"></div>
+      <div class="swatch" style="background:#d32f2f" title="#d32f2f"></div>
+      <div class="swatch" style="background:#f57c00" title="#f57c00"></div>
+      <div class="swatch" style="background:#7b1fa2" title="#7b1fa2"></div>
+      <div class="swatch" style="background:#00838f" title="#00838f"></div>
+      <div class="swatch" style="background:#455a64" title="#455a64"></div>
+      <div class="swatch" style="background:#bdbdbd" title="#bdbdbd"></div>
+      <div class="swatch" style="background:#1a1a1a" title="#1a1a1a"></div>
+    </div>
+  </section>
+
+  <!-- ─────────────────── BUTTONS ─────────────────── -->
+  <section>
+    <h2>Buttons</h2>
+    <p><strong>Variants</strong></p>
+    <div class="btn-row" style="margin-bottom:.75rem">
+      <button class="btn btn-primary">Primary</button>
+      <button class="btn btn-secondary">Secondary</button>
+      <button class="btn btn-success">Success</button>
+      <button class="btn btn-danger">Danger</button>
+      <button class="btn btn-warning">Warning</button>
+      <button class="btn btn-ghost">Ghost</button>
+    </div>
+    <p><strong>Sizes</strong></p>
+    <div class="btn-row" style="margin-bottom:.75rem">
+      <button class="btn btn-primary btn-sm">Small</button>
+      <button class="btn btn-primary">Default</button>
+      <button class="btn btn-primary btn-lg">Large</button>
+    </div>
+    <p><strong>States</strong></p>
+    <div class="btn-row">
+      <button class="btn btn-primary" disabled>Disabled</button>
+      <button class="btn btn-secondary" disabled>Disabled</button>
+      <button class="btn btn-primary" onclick="document.getElementById('ks-dialog').showModal()">Open Dialog</button>
+    </div>
+  </section>
+
+  <!-- ─────────────────── FORMS ─────────────────── -->
+  <section>
+    <h2>Form Controls</h2>
+    <form onsubmit="return false">
+      <div class="form-grid">
+        <div class="field">
+          <label for="ks-text">Text Input</label>
+          <input type="text" id="ks-text" placeholder="Enter text…" />
+        </div>
+        <div class="field">
+          <label for="ks-email">Email</label>
+          <input type="email" id="ks-email" placeholder="you@example.com" />
+        </div>
+        <div class="field">
+          <label for="ks-password">Password</label>
+          <input type="password" id="ks-password" placeholder="••••••••" />
+        </div>
+        <div class="field">
+          <label for="ks-number">Number</label>
+          <input type="number" id="ks-number" min="0" max="100" value="42" />
+        </div>
+        <div class="field">
+          <label for="ks-date">Date</label>
+          <input type="date" id="ks-date" />
+        </div>
+        <div class="field">
+          <label for="ks-time">Time</label>
+          <input type="time" id="ks-time" />
+        </div>
+        <div class="field">
+          <label for="ks-color">Color Picker</label>
+          <input type="color" id="ks-color" value="#1976d2" style="height:2.4rem;padding:.2rem;" />
+        </div>
+        <div class="field">
+          <label for="ks-select">Select</label>
+          <select id="ks-select">
+            <option value="">— choose —</option>
+            <option>Option A</option>
+            <option>Option B</option>
+            <option selected>Option C</option>
+          </select>
+        </div>
+        <div class="field" style="grid-column:1/-1">
+          <label for="ks-textarea">Textarea</label>
+          <textarea id="ks-textarea" rows="3" placeholder="Write something…"></textarea>
+        </div>
+        <div class="field error">
+          <label for="ks-error">Input with Error</label>
+          <input type="text" id="ks-error" value="bad value" />
+          <span class="hint">This field contains an invalid value.</span>
+        </div>
+        <div class="field">
+          <label for="ks-disabled">Disabled Input</label>
+          <input type="text" id="ks-disabled" value="Read only" disabled />
+        </div>
+      </div>
+
+      <hr />
+
+      <div class="form-grid">
+        <div>
+          <p style="font-weight:600;margin-bottom:.4rem">Checkboxes</p>
+          <div class="check-group">
+            <label><input type="checkbox" checked /> Option Alpha</label>
+            <label><input type="checkbox" /> Option Beta</label>
+            <label><input type="checkbox" disabled /> Disabled</label>
+          </div>
+        </div>
+        <div>
+          <p style="font-weight:600;margin-bottom:.4rem">Radio Buttons</p>
+          <div class="check-group">
+            <label><input type="radio" name="ks-radio" value="a" checked /> Choice A</label>
+            <label><input type="radio" name="ks-radio" value="b" /> Choice B</label>
+            <label><input type="radio" name="ks-radio" value="c" disabled /> Disabled</label>
+          </div>
+        </div>
+        <div>
+          <p style="font-weight:600;margin-bottom:.4rem">Range Slider</p>
+          <div class="range-row">
+            <input type="range" id="ks-range" min="0" max="100" value="60"
+                   oninput="document.getElementById('ks-range-val').textContent=this.value" />
+            <output id="ks-range-val">60</output>
+          </div>
+        </div>
+        <div>
+          <p style="font-weight:600;margin-bottom:.4rem">File Upload</p>
+          <input type="file" />
+        </div>
+      </div>
+
+      <hr />
+
+      <div style="display:flex;gap:.5rem;flex-wrap:wrap">
+        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="reset" class="btn btn-secondary">Reset</button>
+      </div>
+    </form>
+  </section>
+
+  <!-- ─────────────────── TABLE ─────────────────── -->
+  <section>
+    <h2>Table</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>#</th><th>Name</th><th>Role</th><th>Status</th><th>Joined</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td><td>Alice Martin</td><td>Engineer</td>
+          <td><span style="color:#388e3c;font-weight:600">Active</span></td>
+          <td>2021-03-15</td>
+        </tr>
+        <tr>
+          <td>2</td><td>Bob Torres</td><td>Designer</td>
+          <td><span style="color:#f57c00;font-weight:600">Pending</span></td>
+          <td>2022-07-01</td>
+        </tr>
+        <tr>
+          <td>3</td><td>Carol White</td><td>Manager</td>
+          <td><span style="color:#d32f2f;font-weight:600">Inactive</span></td>
+          <td>2019-11-20</td>
+        </tr>
+        <tr>
+          <td>4</td><td>David Kim</td><td>QA</td>
+          <td><span style="color:#388e3c;font-weight:600">Active</span></td>
+          <td>2023-01-08</td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="5" style="font-size:.8rem;color:#888">Showing 4 of 4 records.</td>
+        </tr>
+      </tfoot>
+    </table>
+  </section>
+
+  <!-- ─────────────────── ALERTS ─────────────────── -->
+  <section>
+    <h2>Alerts &amp; Notifications</h2>
+    <div class="alert alert-info">ℹ️ <strong>Info:</strong> This is an informational message.</div>
+    <div class="alert alert-success">✅ <strong>Success:</strong> Your changes have been saved.</div>
+    <div class="alert alert-warning">⚠️ <strong>Warning:</strong> Please review your input before proceeding.</div>
+    <div class="alert alert-danger">🚨 <strong>Error:</strong> Something went wrong. Please try again.</div>
+  </section>
+
+  <!-- ─────────────────── PROGRESS & METER ─────────────────── -->
+  <section>
+    <h2>Progress &amp; Meter</h2>
+    <p>Progress bar (60%)</p>
+    <progress value="60" max="100">60%</progress>
+    <p style="margin-top:.75rem">Meter (disk usage — medium)</p>
+    <meter min="0" max="100" low="30" high="70" optimum="20" value="55">55 out of 100</meter>
+  </section>
+
+  <!-- ─────────────────── MEDIA ─────────────────── -->
+  <section>
+    <h2>Media</h2>
+    <figure>
+      <img src="https://picsum.photos/seed/ks/800/300" alt="A random placeholder image" loading="lazy" />
+      <figcaption>Placeholder image courtesy of picsum.photos</figcaption>
+    </figure>
+    <hr />
+    <p><strong>Audio</strong></p>
+    <audio controls style="width:100%">
+      <source src="https://www.w3schools.com/html/horse.mp3" type="audio/mpeg" />
+      Your browser does not support the audio element.
+    </audio>
+    <hr />
+    <p><strong>Video</strong></p>
+    <video controls width="100%" style="border-radius:6px;max-height:240px;object-fit:cover">
+      <source src="https://www.w3schools.com/html/movie.mp4" type="video/mp4" />
+      Your browser does not support the video element.
+    </video>
+  </section>
+
+  <!-- ─────────────────── CODE ─────────────────── -->
+  <section>
+    <h2>Code</h2>
+    <p>Inline: <code>const greeting = "Hello, world!";</code></p>
+    <pre><code>// JavaScript example
+function add(a, b) {
+  return a + b;
+}
+
+const result = add(3, 4);
+console.log(`3 + 4 = ${result}`);</code></pre>
+  </section>
+
+  <!-- ─────────────────── DETAILS / ACCORDION ─────────────────── -->
+  <section>
+    <h2>Disclosure / Accordion</h2>
+    <details>
+      <summary>What is a kitchen-sink page?</summary>
+      <p>A kitchen-sink page is a developer reference that exercises every notable HTML element and UI pattern in a single document, making it easy to verify styling and behavior at a glance.</p>
+    </details>
+    <details>
+      <summary>Why use semantic HTML?</summary>
+      <p>Semantic HTML improves accessibility for assistive technologies, aids search-engine indexing, and makes code easier to understand and maintain.</p>
+    </details>
+    <details open>
+      <summary>This one starts open</summary>
+      <p>You can set the <code>open</code> attribute on a <code>&lt;details&gt;</code> element to have it expanded by default.</p>
+    </details>
+  </section>
+
+  <!-- ─────────────────── DIALOG ─────────────────── -->
+  <section>
+    <h2>Dialog (Modal)</h2>
+    <p>Click the <strong>Open Dialog</strong> button in the Buttons section above, or:</p>
+    <button class="btn btn-primary" onclick="document.getElementById('ks-dialog').showModal()">Open Dialog</button>
+  </section>
+
+  <dialog id="ks-dialog">
+    <h3 style="margin-bottom:.5rem">Modal Dialog</h3>
+    <p>This is a native HTML <code>&lt;dialog&gt;</code> element. It traps focus and adds a backdrop automatically.</p>
+    <div class="dialog-actions">
+      <button class="btn btn-secondary" onclick="document.getElementById('ks-dialog').close()">Cancel</button>
+      <button class="btn btn-primary"   onclick="document.getElementById('ks-dialog').close()">Confirm</button>
+    </div>
+  </dialog>
+
+  <!-- ─────────────────── MISC ─────────────────── -->
+  <section>
+    <h2>Miscellaneous</h2>
+    <p><strong>Horizontal Rule</strong></p>
+    <hr />
+    <p><strong>Address</strong></p>
+    <address>
+      123 Web Street<br />
+      San Francisco, CA 94107<br />
+      <a href="mailto:hello@example.com">hello@example.com</a>
+    </address>
+    <hr />
+    <p><strong>Inline elements:</strong>
+      <time datetime="2026-05-06">May 6, 2026</time> ·
+      <q>A short inline quotation.</q> ·
+      <cite>The Art of HTML</cite> ·
+      <var>x</var> = <var>y</var> + 2 ·
+      <samp>$ npm install</samp>
+    </p>
+    <hr />
+    <p><strong>Iframe (embedded page)</strong></p>
+    <iframe
+      src="https://example.com"
+      width="100%"
+      height="160"
+      style="border:1px solid #ddd;border-radius:4px"
+      title="Embedded example.com">
+    </iframe>
+  </section>
+
+</div>
+</body>
+</html>
